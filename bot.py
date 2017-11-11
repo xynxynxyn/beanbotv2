@@ -10,12 +10,12 @@ import random
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
-import youtube_dl
 import datetime
 from discord.ext import commands
 import logging
 import praw
 import os
+import configparser
 
 try:
     import uvloop
@@ -27,7 +27,7 @@ else:
 initial_extensions = [
     'cogs.bean',
     'cogs.music',
-    'cogs.dbuff'
+    'cogs.lwa'
 ]
 
 
@@ -105,15 +105,16 @@ async def on_message(message):
 
 if __name__ == '__main__':
 
-
-    token = 'MzE0MDA4MTQxMjg3MjYwMTYy.C_x6Zw.EUdynto5VWiEBKhGdBM2uXi1uJE'
+    configParser = configparser.RawConfigParser()   
+    configfilepath = r'config.txt'
+    configParser.read(configfilepath)
+    token = configParser.get('Bot', 'token')
+    print(token)
     for extension in initial_extensions:
         try:
             bot.load_extension(extension)
         except Exception as e:
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
-
-
     bot.loop.create_task(check_sing(bot))
     #bot.loop.create_task(check_update(bot))
     bot.run(token)

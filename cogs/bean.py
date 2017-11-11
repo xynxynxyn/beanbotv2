@@ -21,7 +21,6 @@ import logging
 
 
 class Bean:
-    
     def __init__(self, bot):
         self.bot = bot
 
@@ -33,44 +32,25 @@ class Bean:
             headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
             streamer_html = requests.get('https://api.twitch.tv/kraken/streams/sing_sing?client_id=vpmzqjo3ab8dyeslvz2ia3r3yehif3', headers=headers).json()
             streamer = json.loads(json.dumps(streamer_html))
-            stream_data  = streamer['stream']
+            stream_data = streamer['stream']
             game = stream_data['game']
-            if(stream_data == None):
+            if stream_data == None:
                 reply_message = 'Master Sing is offline. FeelsBadMan'
             else:
                 reply_message = 'Master Sing is playing '
                 reply_message = reply_message + str(game)
                 reply_message = reply_message + ' - http://www.twitch.tv/sing_sing '
                 print(reply_message)
-
-                    
         else:
+            url = "https://api.twitch.tv/kraken/streams/" + args[0] + "?client_id=vpmzqjo3ab8dyeslvz2ia3r3yehif3"
             headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            url = 'https://api.twitch.tv/kraken/streams/'
-            url = url + str(args[0])
-            url= url + '?client_id=vpmzqjo3ab8dyeslvz2ia3r3yehif3'
             streamer_html = requests.get(url, headers=headers).json()
             streamer = json.loads(json.dumps(streamer_html))
-            if streamer == None:
-                reply_message = 'No such stream found'
-            else:  
-                stream_data  = streamer['stream']
-               
-                reply_message = 'http://www.twitch.tv/'
-                if stream_data == None:
-                    reply_message += args[0]
-                    reply_message += ' is offline'
-                else:
-                    game = stream_data['game']
-                    reply_message += args[0]
-                    reply_message += ' is playing '
-                    reply_message += str(game)
+            stream_data = streamer['stream']
+            game = stream_data['game']
+            reply_message = str(args[0]) + " is playing " + str(game) + " - http://www.twitch.tv/" + str(args[0]) 
 
         await self.bot.say(reply_message) #yay
-
-
-
-
 
 
 
@@ -82,8 +62,7 @@ class Bean:
         streamer = json.loads(json.dumps(streamer_html))
         stream_data = streamer['streams']
         i = 1
-        reply_message = """
-        Top 5 Dota streams:\n\n"""
+        reply_message = """Top 5 Dota streams:\n\n"""
         for stream in stream_data[:5]:
             name = stream['channel']['display_name']
             url = "https://www.twitch.tv/" + stream['channel']['name']
@@ -93,14 +72,10 @@ class Bean:
             reply_message = reply_message + " - <"
             reply_message = reply_message + url
             reply_message = reply_message + ">\n\n"
-            i+=1
-        em = discord.Embed(title = '', description=reply_message, colour=0x6441A5)
+            i += 1
+        em = discord.Embed(title='', description=reply_message, colour=0x6441A5)
         await self.bot.say(embed=em)
 
-
-
-
-            
 
     @commands.command(pass_context=True)
     async def mymmr(self, ctx):
@@ -150,13 +125,13 @@ class Bean:
         reply_message = reply_message + ' your true love is '
         server = ctx.message.author.server
         member_list = [x for x in server.members]
-        online_list = [i for i in member_list if str(i.status) == 'online']
-        loveboy = random.choice(online_list)
+        online_member_list = [i for i in member_list if str(i.status) == 'online']
+        loveboy = random.choice(online_member_list)
         await self.bot.say(reply_message + loveboy.display_name)
 
     @commands.command(pass_context=True)
     async def love(self, ctx, *args):
-        """Kappapride"""
+        """KappaPride"""
         if len(args) == 0:
             reply_message = "You need to mention a name."
         else:
@@ -184,13 +159,14 @@ class Bean:
 
     @commands.group(pass_context=True, invoke_without_command=True)
     async def kumiko(self, ctx):
+        """ehhhhhh"""
         with open("cogs/res/kumiko.txt", "r+") as f:
-            kumiko_list = f.read().splitlines();
-            reply_message = random.choice(kumiko_list)
+            kumiko_img_list = f.read().splitlines()
+            reply_message = random.choice(kumiko_img_list)
         await self.bot.say(reply_message)
 
     @kumiko.command(pass_context=True, name='add')
-    async def addk(self, ctx, *args):
+    async def add_kumiko(self, ctx, *args):
         kumiko_link = list(args)
         link = ' '.join(kumiko_link)
         with open("cogs/res/kumiko.txt", "a+") as f:
@@ -201,23 +177,18 @@ class Bean:
             else:
                 reply_message = "You are not authorized to add rarekumikos"
         await self.bot.say(reply_message)
-    # @commands.command()
-    # async def kumiko(self):
-    #     dir = os.path.join("cogs", "res", "kumiko.txt")
-    #     with open(dir) as f:
-    #         lines = f.read().splitlines()
-    #         await self.bot.say(random.choice(lines))
-   
+
    
     @commands.group(pass_context=True, invoke_without_command=True)
     async def succ(self, ctx):
+        """besto cakes"""
         with open("cogs/res/succ.txt", "r+") as f:
-            kumiko_list = f.read().splitlines();
-            reply_message = random.choice(kumiko_list)
+            kumiko_img_list = f.read().splitlines()
+            reply_message = random.choice(kumiko_img_list)
         await self.bot.say(reply_message)
 
     @succ.command(pass_context=True, name='add')
-    async def add(self, ctx, *, query:str):
+    async def add_succ(self, ctx, *, query:str):
         with open("cogs/res/succ.txt", "a+") as f:
             if(ctx.message.author.id in ['106822120276832256', '77462706893881344']):
                 print(query)
@@ -225,7 +196,7 @@ class Bean:
                 f.write("\n")
                 reply_message = 'Image added'
             else:
-                reply_message = "You are not authorized to add rarekumikos"
+                reply_message = "You are not authorized to add succs"
         await self.bot.say(reply_message)
 
 
@@ -245,6 +216,7 @@ class Bean:
 
     @commands.command()
     async def koi(self):
+        """bad taste"""
         reply_message = 'https://www.youtube.com/watch?v=gK57X6WWi5E'
         await self.bot.say(reply_message)
 
@@ -264,8 +236,6 @@ class Bean:
     async def wutface(self):
         """HAI DOMO"""
         await self.bot.say('https://cdn.discordapp.com/attachments/259440947434225664/297810508650905611/16998849_993717407439407_6365115539161661315_n.jpg')
-
-
 
 
 
@@ -293,13 +263,14 @@ class Bean:
 
     @commands.group(pass_context=True, invoke_without_command=True)
     async def grill(self, ctx):
+        """not gay"""
         with open("cogs/res/grill_list.txt", "r+") as f:
-            trap_list = f.read().splitlines();
+            trap_list = f.read().splitlines()
             reply_message = random.choice(trap_list)
         await self.bot.say(reply_message)
 
     @grill.command(pass_context=True, name='add')
-    async def add(self, ctx, *, query:str):
+    async def add_grill(self, ctx, *, query:str):
         with open("cogs/res/grill_list.txt", "a+") as f:
             if(ctx.message.author.id in ['120473568382418945', '77462706893881344']):
                 print(query)
@@ -337,49 +308,51 @@ class Bean:
         await self.bot.say(reply_message)
 
 
-    @commands.command(pass_context=True)
+    @commands.group(pass_context=True, invoke_without_command=True)
     async def smug(self, ctx):
-        smug_list = ['https://cdn.discordapp.com/attachments/299190496964771841/299191233245478913/1459243739540.jpg',
-                                      'https://cdn.discordapp.com/attachments/299190496964771841/299191240052965376/1444236147368.png',
-                                      'https://cdn.discordapp.com/attachments/299190496964771841/299191248886038529/1436640383591-3.png',
-                                      'https://cdn.discordapp.com/attachments/299190496964771841/299191250861555712/1436640383572-0.jpg',
-                                      'https://cdn.discordapp.com/attachments/299190496964771841/299191287456727043/1376763247995.png',
-                                      'https://cdn.discordapp.com/attachments/299190496964771841/299191291697299458/1371730299235.png',
-                                      'http://i.imgur.com/1Otx4Td.jpg', #done
-                                      'http://i.imgur.com/GnoPQEE.png', #done
-                                      'http://i.imgur.com/ft26qTV.png', #done
-                                      'http://i.imgur.com/aUDo3cc.jpg', #done
-                                      'http://i.imgur.com/41rr3aF.png', #done
-                                      'http://i.imgur.com/4cit8Uv.jpg', #done
-                                      'http://i.imgur.com/6Nwdbgu.png', #done
-                                      'http://i.imgur.com/dVC01Om.jpg', #done
-                                      'https://cdn.discordapp.com/attachments/292869746293211146/300994617619513356/1471581644134.png',
-                                      'http://i.imgur.com/SKdcPMj.jpg', #done
-                                      'http://i.imgur.com/PgrjemU.png', #done
-                                      'http://i.imgur.com/NAIlQoc.png', #done
-                                      'http://i.imgur.com/gZ6muFD.png',
-                                      'https://img.fireden.net/a/image/1460/24/1460248889597.png',
-                                      'http://i.imgur.com/54WNmGT.jpg' #done
-                                    ]
-        random.shuffle(smug_list)
+        """no explanation needed"""
+        with open("cogs/res/smug.txt", "r+") as f:
+            smug_list = f.read().splitlines()
         if str(ctx.message.author) == 'koi#9765':
             reply_message = 'http://i.imgur.com/TAFmyQv.jpg'
         else:
-            reply_message = smug_list[0]
+            reply_message = random.choice(smug_list)
         await self.bot.say(reply_message)
+
+    @smug.command(pass_context=True, name='add')
+    async def add_smug(self, ctx, *args):
+        smug_link = list(args)
+        link = ' '.join(smug_link)
+        with open("cogs/res/smug.txt", "a+") as f:
+            if(ctx.message.author.id in ['106822120276832256', '77462706893881344']):
+                f.write(link)
+                f.write("\n")
+                reply_message = 'Image added'
+            else:
+                reply_message = "You are not authorized to add rarekumikos"
+        await self.bot.say(reply_message)
+
+
+
 
     @commands.command()
     async def thinking(self):
+        """🤔"""
         reply_message = 'https://cdn.discordapp.com/attachments/292869746293211146/300253029389565952/a9ef568c4c133ad983e836b5bcb90bcae68feb3190df7e37aa51958678c94134.png'
         await self.bot.say(reply_message)
 
+
+
     @commands.command()
     async def smorc(self):
+        """10 base armor"""
         await self.bot.say('https://cdn.discordapp.com/attachments/292869746293211146/300989271316365312/')
         
+
+
     @commands.command()
     async def roll(self, *args):
-        """Rolls a dice in NdN format."""
+        """Rolls a dice. Format: !roll <max_value> <no _of_dice>"""
         limit = 6
         rolls = 1
         for ar in args:
@@ -398,14 +371,22 @@ class Bean:
         result = ','. join(str(random.randint(1, limit)) for r in range(rolls))
         await self.bot.say(":game_die: You got " + str(result))
 
+
+
+
     @commands.command()
     async def mycolor(self):
+        """cmonBruh"""
         colors = ['TriHard', 'MingLee', 'KKona', 'jew', 'pajeet', 'ANELE', 'Ruski']
         reply_message = 'You a ' + random.choice(colors)
         await self.bot.say(reply_message)
 
+
+
+
     @commands.command(pass_context=True)
     async def gender(self, ctx, *args):
+        """HotPokket"""
         dir = os.path.join("cogs", "res", "gender.txt")
         with open(dir) as f:
             lines = f.read().splitlines()
@@ -423,91 +404,63 @@ class Bean:
                 reply_message = gender + " identifies themselves as " + random.choice(lines)
             else:
                 reply_message = "Enter a valid username or role"
-        await self.bot.say(reply_message)       
+        await self.bot.say(reply_message)    
 
     @commands.command(pass_context=True)
-    async def nuke(self, ctx, *args):
-        if(len(args) == 0):
-            print("no args")
-            reply_message = "Enter a location name"
+    async def avatar(self, ctx, *member: discord.User):
+        """the fucc do you need a description for"""
+        if(member):
+            reply_message = member[0].avatar_url
         else:
-            addrlist = list(args)
-            addr = ' '.join(addrlist)
-            if(addr.lower() == 'pyongyang'):
-                url = "http://i1.mirror.co.uk/incoming/article7842826.ece/ALTERNATES/s615/Kim-Jong-Un.jpg"
+            reply_message = ctx.message.author.avatar_url
+        await self.bot.say(reply_message)
+
+    @commands.group(pass_context=True, invoke_without_command=True)
+    async def frenzlin(self, ctx):
+        """love u m8"""
+        dir = os.path.join("cogs", "res", "frenzlin.txt")
+        with open(dir) as f:
+            lines = f.read().splitlines()
+            await self.bot.say(random.choice(lines))
+
+
+    @frenzlin.command(pass_context=True, name='add')
+    async def add_ritsu(self, ctx, *args):
+        ritsu_link = list(args)
+        link = ' '.join(ritsu_link)
+        with open("cogs/res/frenzlin.txt", "a+") as f:
+            if(ctx.message.author.id in ['110840185155010560', '77462706893881344']):
+                f.write(link)
+                f.write("\n")
+                reply_message = 'Image added'
             else:
-                geolocator = Nominatim()
-                location = geolocator.geocode(addr)
-                print("got lat and long")
-                reply = str(location.latitude)
-                print(location.latitude)
-                #options = {"quiet": "", "xvfb": "", "javascript-delay": "30000", "height": "600", "width": "800", "images": ""}
-                url = "https://nuclearsecrecy.com/nukemap/?&kt=100000&lat={}&lng={}&hob_opt=1&hob_psi=5&hob_ft=47553&ff=52&zm=9".format(location.latitude, location.longitude)
-                #imgkit.from_url(url, dir, options=options)
-
-        #            '''  display = Display(visible=0, size=(800, 600))
-        #             display.start()
-
-        #             browser = webdriver.Firefox()
-        #             browser.get(url)
-        #             browser.save_screenshot(dir)
-        #             browser.quit()
-        #  '''
-                # display.stop()
-        await self.bot.say(url)
+                reply_message = "You are not authorized to add ritsus"
+        await self.bot.say(reply_message)
 
 
-    @commands.command(pass_context=True)
-    async def fuccboi(self, ctx):
-        dir = os.path.join("cogs", "res", "fuccboi.json")
-        today_date = date.today()
-        with open(dir, "r+") as f:
-            try:
-                j = json.load(f)
-            except:
-                j = {
-                        str(ctx.message.server): {
-                            "date": "",
-                            "fuccboi": ""
-                        }
-                    }
-            if(j[str(ctx.message.server)]["date"] == str(today_date)):
-                fuccboi = await self.bot.get_user_info(j[str(ctx.message.server)]["fuccboi"])
-                print(fuccboi)
-                print(fuccboi.id)
-
-            else:
-                member_list = ctx.message.server.members
-                online_list = [i for i in member_list if str(i.status) == 'online']
-                fuccboi = random.choice(online_list)
-                print(fuccboi.mention)
-                j[str(ctx.message.server)]["fuccboi"] = fuccboi.id
-                j[str(ctx.message.server)]["date"] = str(today_date)
-                f.seek(0)
-                json.dump(j, f, indent=4)
-                f.truncate()
-        await self.bot.say("Today's fuccboi is "+ fuccboi.mention)
-
-
-    # @commands.command(pass_context=True)
-    # async def frenzlin(self, ctx):
-    #     func_list = ['gender', 'mydong', 'mymmr', 'mycolor', 'smug', 'fuccboi']
-    #     await eval(random.choice(func_list))(self,ctx)
 
     @commands.command()
     async def haidomo(self):
+        """bacchuaru youtuba"""
         dir = os.path.join("cogs", "res", "kizuna.txt")
         with open(dir) as f:
             lines = f.read().splitlines()
             await self.bot.say(random.choice(lines))
 
+
+
+
     @commands.command()
     async def bean(self):
+        """BEANED"""
         await self.bot.say("http://i0.kym-cdn.com/photos/images/facebook/001/166/993/284.png")
+
+
 
 
     @commands.command(pass_context=True)
     async def tidp(self,ctx):
+        """stfu"""
         tidp_file =  os.path.join("cogs", "res", "tidp.txt")
         f = open(tidp_file)
         message_id = str(f.read())
@@ -526,9 +479,14 @@ class Bean:
             await self.bot.add_reaction(tidp_message, '🇮')
             await self.bot.add_reaction(tidp_message, '🇩')
             await self.bot.add_reaction(tidp_message, '🇵')
+        await self.bot.delete_message(ctx.message)
+
         
 
-
+    @commands.command()
+    async def givemetheipofeveryoneinthischat(self):
+        reply_message = "192.168.1.1"
+        await self.bot.say(reply_message)
 
 
 def setup(bot):
