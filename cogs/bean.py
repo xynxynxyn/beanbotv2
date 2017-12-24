@@ -17,6 +17,8 @@ from discord.ext import commands
 import time
 from geopy.geocoders import Nominatim
 import logging
+from pybooru import Danbooru
+import configparser
 
 
 
@@ -91,8 +93,53 @@ class Bean:
         else:
             reply_message = reply_message + ' LUL'
         await self.bot.say(reply_message)
+    
+    
+    @commands.command(pass_context=True)
+    async def joke(self, ctx):
+        for i in range(5):
+            await self.bot.say("?joke")
+            time.sleep(10)
 
+    @commands.command(pass_context=True)
+    async def gei(self, ctx, *member: discord.User):
+        """Check your true MMR"""
+        if(ctx.message.author.id == "106822120276832256"):
+            gei_percent = 0
+        else:
+            gei_percent = randint(0,100)
+        if(member):
+            if(member[0].id == "106822120276832256"):
+                gei_percent = 0
+            reply_message = member[0].mention + ' is '
+        else:
+            reply_message = 'Hey ' + ctx.message.author.mention + ', you are ' 
+        reply_message = reply_message +  str(gei_percent) + '% gei'
+        if  gei_percent > 50:
+            reply_message = reply_message + ' WutFace'
+        else:
+            reply_message = reply_message + ' FeelsOkayMan'
+        await self.bot.say(reply_message)
 
+    @commands.command(pass_context=True)
+    async def weeb(self, ctx, *member: discord.User):
+        """Check your true MMR"""
+        if(ctx.message.author.id == "106822120276832256"):
+            gei_percent = 100
+        else:
+            gei_percent = randint(0,100)
+        if(member):
+            if(member[0].id == "106822120276832256"):
+                gei_percent = 100
+            reply_message = member[0].mention + ' is '
+        else:
+            reply_message = 'Hey ' + ctx.message.author.mention + ', you are ' 
+        reply_message = reply_message +  str(gei_percent) + '% weeb'
+        if  gei_percent > 50:
+            reply_message = reply_message + ' VoHiYo'
+        else:
+            reply_message = reply_message + ' FeelsGoodMan'
+        await self.bot.say(reply_message)
 
         
 
@@ -200,17 +247,6 @@ class Bean:
         await self.bot.say(reply_message)
 
 
-    @commands.command(pass_context=True)
-    async def weeb(self, ctx):
-        """VoHiYo"""
-        if str(ctx.message.author) == 'HERE I AM - Puck 2016#5286':
-            reply_message = "You are not allowed to use this command you fake weeb"
-        else:
-            reply_message = "WEEB VoHiYo THE VoHiYo NORMIES VoHiYo AWAY"
-
-        await self.bot.say(reply_message)
-
-
 
 
 
@@ -225,9 +261,9 @@ class Bean:
 
 
     @commands.command()
-    async def vlecxius(self):
+    async def vlecc(self):
         """Retard"""
-        await self.bot.say('http://i3.kym-cdn.com/photos/images/newsfeed/001/242/766/46c.png')
+        await self.bot.say('*From their palisades in the mountainous dimension of Nippon, the Council of Weebs (formerly known as the Cultum Weaboo), cry and mourn over the betrayal of Vlecxius, their annointed Chosen Weeb. They pray that one day he will return from his exodus in the realm of Civilise WehSing. There, he slanders the name of the Cultum Weaboo, denouncing their ways and preaching their downfall.*')
 
 
 
@@ -447,6 +483,14 @@ class Bean:
             lines = f.read().splitlines()
             await self.bot.say(random.choice(lines))
 
+    @commands.command()
+    async def havocc(self):
+        """gei"""
+        dir = os.path.join("cogs", "res", "havok.txt")
+        with open(dir) as f:
+            lines = f.read().splitlines()
+            await self.bot.say(random.choice(lines))
+
 
 
 
@@ -454,8 +498,26 @@ class Bean:
     async def bean(self):
         """BEANED"""
         await self.bot.say("http://i0.kym-cdn.com/photos/images/facebook/001/166/993/284.png")
-
-
+    
+    @commands.command(pass_context=True)
+    async def danbooru(self, ctx, *query : str):
+        configParser = configparser.RawConfigParser()   
+        configfilepath = os.path.dirname(__file__) + '/../config.txt'
+        configParser.read(configfilepath)
+        username = configParser.get('danbooru', 'username')
+        password = configParser.get('danbooru', 'password')
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            if(query):
+                url = "https://danbooru.donmai.us/posts.json?random=true&limit=50&tags=" + str(query[0])
+            else:
+                url = "https://danbooru.donmai.us/posts.json?random=true&limit=50"
+            dbpost = requests.get(url, auth=('binbows', 'OD-_tUjUrxIq9-a7l4qw6hBN1iz33B6Xta5sWsP3XVE'), headers=headers).json()
+            await self.bot.say("http://danbooru.donmai.us" + random.choice(dbpost)["file_url"])
+        except Exception as e:
+            print(str(query) + str(e))
+            await self.bot.say("There's something wrong with your query, because I can't find anything with that tag.")
+        
 
 
     @commands.command(pass_context=True)
@@ -482,6 +544,9 @@ class Bean:
         await self.bot.delete_message(ctx.message)
 
         
+    @commands.command()
+    async def christmas(self):
+        await self.bot.say("https://i.imgur.com/VWpTe00.gif")
 
     @commands.command()
     async def givemetheipofeveryoneinthischat(self):

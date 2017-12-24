@@ -1,7 +1,9 @@
 import asyncio
 import discord
 from discord.ext import commands
-
+import copy
+import janus
+import os
 if not discord.opus.is_loaded():
     # the 'opus' library here is opus.dll on windows
     # or libopus.so on linux in the current directory
@@ -132,7 +134,7 @@ class Music:
             success = await ctx.invoke(self.summon)
             if not success:
                 return
-
+        song = "padoru padoru 10 hours"
         try:
             player = await state.voice.create_ytdl_player(song, ytdl_options=opts, after=state.toggle_next, before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5")
         except Exception as e:
@@ -176,19 +178,21 @@ class Music:
 
         This also clears the queue.
         """
-        server = ctx.message.server
-        state = self.get_voice_state(server)
+        await self.bot.say("In the good name of our king Nero Claudius, we shall have no stopping of songs today. Merry Christmas. Yours truly, Bean. \n")
+        await self.bot.say("https://i.imgur.com/VWpTe00.gif")
+        # server = ctx.message.server
+        # state = self.get_voice_state(server)
 
-        if state.is_playing():
-            player = state.player
-            player.stop()
+        # if state.is_playing():
+        #     player = state.player
+        #     player.stop()
 
-        try:
-            state.audio_player.cancel()
-            del self.voice_states[server.id]
-            await state.voice.disconnect()
-        except:
-            pass
+        # try:
+        #     state.audio_player.cancel()
+        #     del self.voice_states[server.id]
+        #     await state.voice.disconnect()
+        # except:
+        #     pass
 
     @commands.command(pass_context=True, no_pm=True)
     async def skip(self, ctx):
@@ -196,26 +200,28 @@ class Music:
 
         3 skip votes are needed for the song to be skipped.
         """
+        await self.bot.say("In the good name of our king Nero Claudius, we shall have no skipping of songs today. Merry Christmas. Yours truly, Bean. \n")
+        await self.bot.say("https://i.imgur.com/VWpTe00.gif")
 
-        state = self.get_voice_state(ctx.message.server)
-        if not state.is_playing():
-            await self.bot.say('Not playing any music right now...')
-            return
+        # state = self.get_voice_state(ctx.message.server)
+        # if not state.is_playing():
+        #     await self.bot.say('Not playing any music right now...')
+        #     return
 
-        voter = ctx.message.author
-        if voter == state.current.requester:
-            await self.bot.say('Requester requested skipping song...')
-            state.skip()
-        elif voter.id not in state.skip_votes:
-            state.skip_votes.add(voter.id)
-            total_votes = len(state.skip_votes)
-            if total_votes >= 3:
-                await self.bot.say('Skip vote passed, skipping song...')
-                state.skip()
-            else:
-                await self.bot.say('Skip vote added, currently at [{}/3]'.format(total_votes))
-        else:
-            await self.bot.say('You have already voted to skip this song.')
+        # voter = ctx.message.author
+        # if voter == state.current.requester:
+        #     await self.bot.say('Requester requested skipping song...')
+        #     state.skip()
+        # elif voter.id not in state.skip_votes:
+        #     state.skip_votes.add(voter.id)
+        #     total_votes = len(state.skip_votes)
+        #     if total_votes >= 3:
+        #         await self.bot.say('Skip vote passed, skipping song...')
+        #         state.skip()
+        #     else:
+        #         await self.bot.say('Skip vote added, !play decadence disturbedcurrently at [{}/3]'.format(total_votes))
+        # else:
+        #     await self.bot.say('You have already voted to skip this song.')
 
     @commands.command(pass_context=True, no_pm=True)
     async def playing(self, ctx):
@@ -227,6 +233,26 @@ class Music:
         else:
             skip_count = len(state.skip_votes)
             await self.bot.say('Now playing {} [skips: {}/3]'.format(state.current, skip_count))
+    
+    @commands.command(pass_context=True, no_pm=True)
+    async def queue(self, ctx):
+        state = self.get_voice_state(ctx.message.server)
+        if state.current is None:
+            await self.bot.say('No songs in queue')
+        else:
+            curr_queue = asyncio.Queue()
+            song_list = []
+            i = 1
+            reply_message = ""
+            curr_queue = state.songs
+            print(curr_queue)
+            while curr_queue.qsize():
+                song = curr_queue.get_nowait()
+                curr_queue.put_nowait(song)
+                reply_message = reply_message + " [" + str(i) + "] " + str(song) + "\n"
+                i+=1 
+            em = discord.Embed(title='Songs in queue', description=reply_message, colour=0x6441A5)
+            await self.bot.say(embed=em)
 
 def setup(bot):
     bot.add_cog(Music(bot))
