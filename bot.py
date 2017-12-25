@@ -56,20 +56,28 @@ async def on_ready():
 
 #Check sing is live
 
-async def check_sing(bot):
+# async def check_sing(bot):
+#     await bot.wait_until_ready()
+#     while not bot.is_closed:
+#         headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+#         streamer_html = requests.get('https://api.twitch.tv/kraken/streams/qoivrn?client_id=vpmzqjo3ab8dyeslvz2ia3r3yehif3', headers=headers).json()
+#         streamer = json.loads(json.dumps(streamer_html))
+#         stream_data  = streamer['stream']
+#         if(stream_data is None):
+#             reply_message = 'Qoi is offline'
+#         else:
+#             reply_message = 'Qoi is live'
+#         await bot.change_presence(game=discord.Game(name=reply_message, url="http://www.twitch.tv/sing_sing", type=1))
+#         await asyncio.sleep(60) # task runs every 60 seconds
+
+async def check_voice(bot):
     await bot.wait_until_ready()
     while not bot.is_closed:
-        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-        streamer_html = requests.get('https://api.twitch.tv/kraken/streams/qoivrn?client_id=vpmzqjo3ab8dyeslvz2ia3r3yehif3', headers=headers).json()
-        streamer = json.loads(json.dumps(streamer_html))
-        stream_data  = streamer['stream']
-        if(stream_data is None):
-            reply_message = 'Qoi is offline'
-        else:
-            reply_message = 'Qoi is live'
-        await bot.change_presence(game=discord.Game(name=reply_message, url="http://www.twitch.tv/sing_sing", type=1))
-        await asyncio.sleep(60) # task runs every 60 seconds
-
+        clients = bot.voice_clients
+        for client in clients:
+            members = client.channel.voice_members
+            print(members)
+    await asyncio.sleep(60)
 # async def check_update(bot):
 #     await bot.wait_until_ready()
 #     path_to_file = os.path.join("cogs", "res", "update.txt")
@@ -98,7 +106,7 @@ async def on_message(message):
         return
 
     if message.author.id=="298167752017838082" :
-         tidp_file = os.path.join("beanbotv2", "cogs", "res", "tidp.txt")
+         tidp_file = os.path.join("cogs", "res", "tidp.txt")
          f = open(tidp_file, "w")
          f.write(message.id) 
     
@@ -124,6 +132,6 @@ if __name__ == '__main__':
             bot.load_extension(extension)
         except Exception as e:
             print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
-    bot.loop.create_task(check_sing(bot))
+    #bot.loop.create_task(check_voice(bot))
     #bot.loop.create_task(check_update(bot))
     bot.run(token)
