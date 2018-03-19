@@ -254,6 +254,8 @@ class Music:
             print(str(e))
         finally:
             self.song_list.pop(0) 
+            if (len(self.song_list) == 0):
+                state.voice.disconnect()
 
     
 def setup(bot):

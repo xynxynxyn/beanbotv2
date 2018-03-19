@@ -501,24 +501,43 @@ class Bean:
     
     @commands.command(pass_context=True)
     async def danbooru(self, ctx, *query : str):
+        banned_terms = ["loli", "kanna_kamui+rating:q", "kanna_kamui+rating:s", "kanna_kamui+rating:e", "kanna_kamui", "kannakamui(dragon)_(maidragon)+rating:q", "kobayashi-san_chi_no_maidragon+white_hair", "rating:q+kanna_kamui", "rating:questionable+kanna_kamui"]
+        search_string = query[0]
+        if (query and search_string in banned_terms):
+            await self.bot.say("https://i.imgur.com/PgN2R1J.png")
+        else:
+            if "+rating:e" in search_string:
+                search_string = search_string.replace("+rating:e", "")
+            if "+rating:q" in search_string:
+                search_string = search_string.replace("+rating:q", "")
+            search_string += " rating:s"
+            print(search_string)
         configParser = configparser.RawConfigParser()   
-        configfilepath = os.path.dirname(__file__) + '/../config.txt'
+        configfilepath = 'config.txt'
         configParser.read(configfilepath)
         username = configParser.get('danbooru', 'username')
         password = configParser.get('danbooru', 'password')
+        print(username + " " + password)
+        client = Danbooru('danbooru', username=username, api_key=password)
+        response = client.post_list(tags=search_string, limit=1, random=True)
+        print(response)
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            if(query):
-                url = "https://danbooru.donmai.us/posts.json?random=true&limit=50&tags=" + str(query[0])
-            else:
-                url = "https://danbooru.donmai.us/posts.json?random=true&limit=50"
-            dbpost = requests.get(url, auth=('binbows', 'OD-_tUjUrxIq9-a7l4qw6hBN1iz33B6Xta5sWsP3XVE'), headers=headers).json()
-            await self.bot.say("http://danbooru.donmai.us" + random.choice(dbpost)["file_url"])
-        except Exception as e:
-            print(str(query) + str(e))
-            await self.bot.say("There's something wrong with your query, because I can't find anything with that tag.")
-        
+            response_url = response[0]["file_url"]
+            if response_url.startswith("https") == False:
+                response_url = response_url.replace("/data/", "/data/__")
+                response_url = "https://danbooru.donmai.us" + response_url
+            await self.bot.say(response_url)
+        except:
+            await self.bot.say("There's something wrong with your query, because I can't find anything with that tag.")    
 
+    @commands.command(pass_context=True)
+    async def nyx(self, ctx):
+        img = os.path.join("cogs", "res", "nyx.png")
+        await self.bot.send_file(ctx.message.channel, fp=img)
+    
+    @commands.command(pass_context=True)
+    async def nyxkoi(self, ctx):
+        await self.bot.say("https://i.imgur.com/xabuEyd.jpg")
 
     @commands.command(pass_context=True)
     async def tidp(self,ctx):

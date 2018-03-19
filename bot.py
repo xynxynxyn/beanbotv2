@@ -105,20 +105,14 @@ async def on_message(message):
     if message.author.bot:
         return
 
+    if "happy new year" in message.content.lower():
+        reply_message = "Happy new year to you too " + message.author.mention
+        await bot.send_message(destination=message.channel, content=reply_message)
+
     if message.author.id=="298167752017838082" :
          tidp_file = os.path.join("cogs", "res", "tidp.txt")
          f = open(tidp_file, "w")
          f.write(message.id) 
-    
-    
-    if message.author.id=="106822120276832256" and message.content.startswith('!'):
-        chance = random.randint(0,1)
-        if (chance == 0):
-            grill_file = os.path.join("cogs", "res", "grill_list.txt")
-            with open(grill_file, "r+") as f:
-                trap_list = f.read().splitlines()
-                reply_message = random.choice(trap_list)
-            await bot.send_message(destination=message.channel, content=reply_message)
     await bot.process_commands(message)
 
 if __name__ == '__main__':
