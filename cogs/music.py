@@ -2,7 +2,6 @@ import asyncio
 import discord
 from discord.ext import commands
 import copy
-import janus
 import os
 if not discord.opus.is_loaded():
     # the 'opus' library here is opus.dll on windows

@@ -7,7 +7,6 @@ import argparse
 import requests
 import json
 import random
-from google import google
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse

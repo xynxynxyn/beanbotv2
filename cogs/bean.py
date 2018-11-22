@@ -8,7 +8,6 @@ import os
 import requests
 import json
 import random
-from google import google
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib.parse
@@ -25,6 +24,11 @@ import configparser
 class Bean:
     def __init__(self, bot):
         self.bot = bot
+        configParser = configparser.RawConfigParser()   
+        configfilepath = 'config.txt'
+        configParser.read(configfilepath)
+        self.danbooruUsername = configParser.get('danbooru', 'username')
+        self.danbooruPassword = configParser.get('danbooru', 'password')
 
     @commands.command()
     async def info(self, *args):
@@ -456,7 +460,7 @@ class Bean:
         """love u m8"""
         dir = os.path.join("cogs", "res", "frenzlin.txt")
         with open(dir) as f:
-            lines = f.read().splitlines()
+            lines = [x for x in f.readlines() if "imgur" not in x ]
             await self.bot.say(random.choice(lines))
 
 
@@ -506,20 +510,13 @@ class Bean:
         if (query and search_string in banned_terms):
             await self.bot.say("https://i.imgur.com/PgN2R1J.png")
         else:
-            if "+rating:e" in search_string:
-                search_string = search_string.replace("+rating:e", "")
-            if "+rating:q" in search_string:
-                search_string = search_string.replace("+rating:q", "")
-            search_string += " rating:s"
-            print(search_string)
-        configParser = configparser.RawConfigParser()   
-        configfilepath = 'config.txt'
-        configParser.read(configfilepath)
-        username = configParser.get('danbooru', 'username')
-        password = configParser.get('danbooru', 'password')
-        print(username + " " + password)
-        client = Danbooru('danbooru', username=username, api_key=password)
-        response = client.post_list(tags=search_string, limit=1, random=True)
+            if "+rating:e" in search_string and ctx.message.channel is not self.bot.get_channel("298289150581538816"):
+                search_string = search_string.replace("+rating:e", "+rating:s")
+            if "+rating:q" in search_string and ctx.message.channel is not self.bot.get_channel("298289150581538816"):
+                search_string = search_string.replace("+rating:q", "+rating:s")
+        search_string = ' '.join(search_string.split('+'))
+        client = Danbooru('danbooru', username=self.danbooruUsername, api_key=self.danbooruPassword)
+        response = client.post_list(tags=search_string, limit=1, random=True)   
         print(response)
         try:
             response_url = response[0]["file_url"]
