@@ -215,7 +215,7 @@ class Music:
                 await self.bot.say('Skip vote passed, skipping song...')
                 state.skip()
             else:
-                await self.bot.say('Skip vote added, !play decadence disturbedcurrently at [{}/3]'.format(total_votes))
+                await self.bot.say('Skip vote added, currently at [{}/3]'.format(total_votes))
         else:
             await self.bot.say('You have already voted to skip this song.')
 
