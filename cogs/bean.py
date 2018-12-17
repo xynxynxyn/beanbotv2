@@ -136,7 +136,12 @@ class Bean:
         reply_message = 'https://www.youtube.com/watch?v=DBYDvnAkiao'
         await self.bot.say(reply_message)
 
-
+    @commands.command()
+    async def gorgcblame(self):
+        await self.bot.say("Rolling the Gorgc Wheel of Blame")
+        time.sleep(2)
+        blame = ["*I died because I was looking at chat*", "*Where are my supports dude?*", "*WHY NO SLEEP BANE?*", "*That donation message distracted me dude.*"]
+        await self.bot.say(random.choice(blame))
     @commands.command()
     async def vlecc(self):
         """Retard"""
