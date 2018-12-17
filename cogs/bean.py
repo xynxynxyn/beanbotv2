@@ -32,7 +32,7 @@ class Bean:
         self.danbooruPassword = configParser.get('danbooru', 'password')
         self.fuccboiname = 'bonkery' 
         self.fuccboidate = date(2018, 12, 6)
-
+        
     @commands.command(pass_context=True)
     async def mymmr(self, ctx):
         """Check your true MMR"""
@@ -140,7 +140,8 @@ class Bean:
     async def gorgcblame(self):
         await self.bot.say("Rolling the Gorgc Wheel of Blame")
         time.sleep(2)
-        blame = ["*I died because I was looking at chat*", "*Where are my supports dude?*", "*WHY NO SLEEP BANE?*", "*That donation message distracted me dude.*"]
+        with open("cogs/res/gorgcblame.txt", "r") as f:
+            blame = f.readlines()
         await self.bot.say(random.choice(blame))
     @commands.command()
     async def vlecc(self):
