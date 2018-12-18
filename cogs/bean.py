@@ -281,13 +281,6 @@ class Bean:
     async def danbooru(self, ctx, *query : str):
         banned_terms = ["loli", "kanna_kamui+rating:q", "kanna_kamui+rating:s", "kanna_kamui+rating:e", "kanna_kamui", "kannakamui(dragon)_(maidragon)+rating:q", "kobayashi-san_chi_no_maidragon+white_hair", "rating:q+kanna_kamui", "rating:questionable+kanna_kamui"]
         search_string = query[0]
-        if (query and search_string in banned_terms):
-            await self.bot.say("https://i.imgur.com/PgN2R1J.png")
-        else:
-            if "+rating:e" in search_string and ctx.message.channel is not self.bot.get_channel("298289150581538816"):
-                search_string = search_string.replace("+rating:e", "+rating:s")
-            if "+rating:q" in search_string and ctx.message.channel is not self.bot.get_channel("298289150581538816"):
-                search_string = search_string.replace("+rating:q", "+rating:s")
         search_string = ' '.join(search_string.split('+'))
         client = Danbooru('danbooru', username=self.danbooruUsername, api_key=self.danbooruPassword)
         response = client.post_list(tags=search_string, limit=1, random=True)   
