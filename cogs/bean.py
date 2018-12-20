@@ -46,16 +46,18 @@ class Bean:
     @commands.command(pass_context=True)
     async def gei(self, ctx, *member: discord.User):
         """big gei"""
-        gei_percent = 0 if(ctx.message.author.id == "106822120276832256") else randint(0,100)
+        gei_percent = randint(0,100)
         if(member):
-            if(member[0].id == "106822120276832256"):
-                gei_percent = 0
             reply_message = member[0].mention + ' is '
         else:
             reply_message = 'Hey ' + ctx.message.author.mention + ', you are ' 
         reply_message += str(gei_percent) + '% gei'
-        reply_message += ' WutFace' if  gei_percent > 50 else ' FeelsOkayMan'
-        await self.bot.say(reply_message)
+        categorylist = [(100, 'Tidp#9927'), (99, 'nitro members'), (97, '4Head'), (96, 'twin turbine cock'), (86, 'maybe touches your dick'), (76, 'nice butt'), (61, 'arguably gay'), (46, 'wears boating shoes'), (30, 'average european'), (26, '**DO NOT DISTURB THE STATUES**'), (11, '*How did we match clothes again*'), (1, "basic understanding of fashion"), (0, 'HYPERION CHAD PogChamp')]
+        for i in range(len(categorylist)):
+            if gei_percent >= categorylist[i][0]:
+                category = categorylist[i][1]
+                break
+        await self.bot.say(reply_message + ' - ' + category)
 
     @commands.command(pass_context=True)
     async def weeb(self, ctx, *member: discord.User):
