@@ -317,11 +317,17 @@ class Bean:
         reply_message = '.'.join([str(randint(0, 255)) for x in range(4)])
         await self.bot.say(reply_message)
     
-    @commands.command()
-    async def tidp(self):
-        await self.bot.say('The tiddest of')
-        time.sleep(2)
-        await self.bot.say('P\'s')
+    @commands.command(pass_context=True)
+    async def tidp(self,ctx):
+        if(random.randint(0, 1) == 0):
+            await self.bot.send_typing(ctx.message.channel)
+            await self.bot.say('The tiddest of')
+            await self.bot.send_typing(ctx.message.channel)
+            await self.bot.say('P\'s')
+        else:
+            for i in range(5):
+                await self.bot.send_typing(ctx.message.channel)
+                await self.bot.say(":crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: ")
         
     @commands.command(pass_context=True)
     async def fuccboi(self, ctx):
