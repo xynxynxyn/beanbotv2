@@ -19,6 +19,7 @@ import logging
 from pybooru import Danbooru
 import configparser
 from datetime import date
+import re
 
 
 
@@ -32,6 +33,7 @@ class Bean:
         self.danbooruPassword = configParser.get('danbooru', 'password')
         self.fuccboiname = 'bonkery' 
         self.fuccboidate = date(2018, 12, 6)
+        self.dbclient = Danbooru('danbooru', username=self.danbooruUsername, api_key=self.danbooruPassword)
         
     @commands.command(pass_context=True)
     async def mymmr(self, ctx):
@@ -279,13 +281,11 @@ class Bean:
         """BEANED"""
         await self.bot.say("http://i0.kym-cdn.com/photos/images/facebook/001/166/993/284.png")
     
-    @commands.command(pass_context=True)
+    @commands.group(pass_context=True, invoke_without_command=True)
     async def danbooru(self, ctx, *query : str):
-        banned_terms = ["loli", "kanna_kamui+rating:q", "kanna_kamui+rating:s", "kanna_kamui+rating:e", "kanna_kamui", "kannakamui(dragon)_(maidragon)+rating:q", "kobayashi-san_chi_no_maidragon+white_hair", "rating:q+kanna_kamui", "rating:questionable+kanna_kamui"]
-        search_string = query[0]
-        search_string = ' '.join(search_string.split('+'))
-        client = Danbooru('danbooru', username=self.danbooruUsername, api_key=self.danbooruPassword)
-        response = client.post_list(tags=search_string, limit=1, random=True)   
+        search_string = ' '.join(query)
+        print(search_string)
+        response = self.dbclient.post_list(tags=search_string, limit=1, random=True)   
         print(response)
         try:
             response_url = response[0]["file_url"]
@@ -294,8 +294,8 @@ class Bean:
                 response_url = "https://danbooru.donmai.us" + response_url
             await self.bot.say(response_url)
         except:
-            await self.bot.say("There's something wrong with your query, because I can't find anything with that tag.")    
-
+            await self.bot.say("There's something wrong with your query, because I can't find anything with that tag.")
+    
     @commands.command(pass_context=True)
     async def nyx(self, ctx):
         img = os.path.join("cogs", "res", "nyx.png")
@@ -317,13 +317,38 @@ class Bean:
         reply_message = '.'.join([str(randint(0, 255)) for x in range(4)])
         await self.bot.say(reply_message)
     
+    @commands.command()
+    async def tidp(self):
+        await self.bot.say('The tiddest of')
+        time.sleep(2)
+        await self.bot.say('P\'s')
+        
     @commands.command(pass_context=True)
     async def fuccboi(self, ctx):
         server = ctx.message.author.server
         member_list = [x for x in server.members]
         self.fuccboiname = random.choice(member_list).display_name if self.fuccboidate != date.today() else self.fuccboiname
-        reply_message = "Today's fuccboi is " + self.fuccboiname
+        self.fuccboidate = date.today() if self.fuccboidate != date.today() else self.fuccboidate
+        reply_message = "Test Today's fuccboi is " + self.fuccboiname
         await self.bot.say(reply_message)
 
+    @commands.command(pass_context=True)
+    async def imgur(self, ctx, *query : str):
+        search_string = ' '.join(query)
+        url = 'https://api.imgur.com/3/gallery/search/viral/{{window}}/{{page}}?q=' + search_string
+        payload = {}
+        headers = {
+            'Authorization': 'Client-ID d17a097f52b51b7'
+        }
+        response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
+        responsejson = json.loads(response.text)
+        imgurls = []
+        for data in responsejson["data"]:
+            try:
+                for image in data["images"]:
+                    imgurls.append(image["link"])
+            except Exception as e:
+                pass
+        await self.bot.say(random.choice(imgurls))
 def setup(bot):
     bot.add_cog(Bean(bot))
