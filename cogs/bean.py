@@ -31,6 +31,7 @@ class Bean:
         configParser.read(configfilepath)
         self.danbooruUsername = configParser.get('danbooru', 'username')
         self.danbooruPassword = configParser.get('danbooru', 'password')
+        self.imgurToken = configParser.get('imgur', 'token')
         self.fuccboiname = 'bonkery' 
         self.fuccboidate = date(2018, 12, 6)
         self.dbclient = Danbooru('danbooru', username=self.danbooruUsername, api_key=self.danbooruPassword)
@@ -327,7 +328,7 @@ class Bean:
         else:
             for i in range(5):
                 await self.bot.send_typing(ctx.message.channel)
-                await self.bot.say(":crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: :crab: TIDP IS DEAD :crab: ")
+                await self.bot.say(":crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: :crab: TIDP IS ALIVE :crab: ")
         
     @commands.command(pass_context=True)
     async def fuccboi(self, ctx):
@@ -335,7 +336,7 @@ class Bean:
         member_list = [x for x in server.members]
         self.fuccboiname = random.choice(member_list).display_name if self.fuccboidate != date.today() else self.fuccboiname
         self.fuccboidate = date.today() if self.fuccboidate != date.today() else self.fuccboidate
-        reply_message = "Test Today's fuccboi is " + self.fuccboiname
+        reply_message = "Today's fuccboi is " + self.fuccboiname
         await self.bot.say(reply_message)
 
     @commands.command(pass_context=True)
@@ -344,7 +345,7 @@ class Bean:
         url = 'https://api.imgur.com/3/gallery/search/viral/{{window}}/{{page}}?q=' + search_string
         payload = {}
         headers = {
-            'Authorization': 'Client-ID d17a097f52b51b7'
+            'Authorization': 'Client-ID ' + self.imgurToken
         }
         response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
         responsejson = json.loads(response.text)
@@ -356,5 +357,10 @@ class Bean:
             except Exception as e:
                 pass
         await self.bot.say(random.choice(imgurls))
+    
+    @commands.command(pass_context=True)
+    async def block(self, ctx, *member: discord.User):
+        message = await self.bot.get_message(self.bot.get_channel("292869746293211146"), 423951424217677824)
+        await self.bot.say("*"+ message.content + "* - Vlecxius, March 15, 2018.")
 def setup(bot):
     bot.add_cog(Bean(bot))
