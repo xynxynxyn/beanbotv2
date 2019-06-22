@@ -30,4 +30,4 @@ vcrpy==1.10.5
 websockets==3.3
 wrapt==1.10.10
 yarl==0.10.0
-youtube-dl==2017.5.14
+youtube-dl==2019.4.1

@@ -140,7 +140,9 @@ class Bean:
         """bad taste"""
         reply_message = 'https://www.youtube.com/watch?v=DBYDvnAkiao'
         await self.bot.say(reply_message)
-
+    @commands.command()
+    async def msking(self):
+	    await self.bot.say("https://media.discordapp.net/attachments/292869746293211146/563413592888705024/unknown.png")
     @commands.command()
     async def gorgcblame(self):
         await self.bot.say("Rolling the Gorgc Wheel of Blame")
@@ -151,7 +153,7 @@ class Bean:
     @commands.command()
     async def vlecc(self):
         """Retard"""
-        await self.bot.say("'my dicc is big' - Vlecxius, 201X")
+        await self.bot.say("https://cdn.discordapp.com/attachments/292869746293211146/565075918939357184/unknown.png")
 
     @commands.group(pass_context=True, invoke_without_command=True)
     async def grill(self, ctx):
@@ -236,12 +238,12 @@ class Bean:
         reply_message = member[0].avatar_url if member else ctx.message.author.avatar_url
         await self.bot.say(reply_message)
 
-    @commands.group(pass_context=True, invoke_without_command=True)
+    @commands.group(pass_context=True, invoke_without_command=True, aliases=['f'])
     async def frenzlin(self, ctx):
         """love u m8"""
         dir = os.path.join("cogs", "res", "frenzlin.txt")
         with open(dir) as f:
-            lines = [x for x in f.readlines() if "imgur" not in x ]
+            lines = f.readlines()
             await self.bot.say(random.choice(lines))
 
 
@@ -362,5 +364,31 @@ class Bean:
     async def block(self, ctx, *member: discord.User):
         message = await self.bot.get_message(self.bot.get_channel("292869746293211146"), 423951424217677824)
         await self.bot.say("*"+ message.content + "* - Vlecxius, March 15, 2018.")
+    
+    @commands.command(pass_context=True)
+    async def chetp(self, ctx):
+        message = '''
+            I open up chetp. Koi has already posted lolis. Tidp is frogposting and there's three different conversations about anime studios.
+
+"Ugh, this shit again," I groan. I unzip my pants.
+
+I try my hardest to jerk my soft penis but to no avail. Then Donk astolfo-posts. Instant d-d-d-diamonds. The thought of the little penis is enough to get me going. Then Koi posts a doujin screencap of astolfo falling onto railing. I'm soft again. 
+
+No, I sob internally. This can't be happening. Tidp posts another frog emote. Sheep joins the chat and he's typing single word posts. They're all song lyrics. Donk is thinking now; he's posting the thinking face so he has to be thinking.
+
+But my saving grace finally arrives. Vlecxius posts something revolutionary. 
+
+"COLLEGE BOY <:gachigasm:293953451023663116> PEPEPLS" he proudly proclaims. 
+
+D... d...
+
+D-d-d-d....
+
+DIAMONDS
+
+My prostate almost explodes from the ground shattering nut. Thoughts begin rushing through my head: the Golden Age. Calbee, the eastern slavic white supremacist invasion, the First Bean, Daniel, arcana giveaways, the drawing games, and so much more.
+
+I enter a seizure and let the darkness consume me. My last thought: "die tidp."'''
+        await self.bot.say(message)
 def setup(bot):
     bot.add_cog(Bean(bot))

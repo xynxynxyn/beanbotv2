@@ -104,15 +104,7 @@ async def check_voice(bot):
 async def on_message(message):
     if message.author.bot:
         return
-
-    if "happy new year" in message.content.lower():
-        reply_message = "Happy new year to you too " + message.author.mention
-        await bot.send_message(destination=message.channel, content=reply_message)
-
-    if message.author.id=="298167752017838082" :
-         tidp_file = os.path.join("cogs", "res", "tidp.txt")
-         f = open(tidp_file, "w")
-         f.write(message.id) 
+    print(message.author.display_name, ": ", message.content.lower())
     await bot.process_commands(message)
 
 if __name__ == '__main__':
